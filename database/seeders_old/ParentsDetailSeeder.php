@@ -5,9 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Faker;
 use Illuminate\Support\Facades\DB;
-use App\Models\Parents_detail;
+use App\Models\ParentsDetail;
 
-class Parents_detailSeeder extends Seeder
+class ParentsDetailSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -27,7 +27,7 @@ class Parents_detailSeeder extends Seeder
             ->get();
 
         foreach ($users as $user) {
-            Parents_detail::create([
+            ParentsDetail::create([
                 'user_id' => $user->id,
                 'father_name' => $faker->name(),
                 'mother_name' => $faker->name(),

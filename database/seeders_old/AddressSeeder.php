@@ -16,6 +16,7 @@ class AddressSeeder extends Seeder
      */
     public function run()
     {
+        $faker = Faker\Factory::create();
         $users = DB::table('users')
             ->select(DB::raw('id'))
             ->where('User_type', '!=', 'admin')
@@ -23,7 +24,15 @@ class AddressSeeder extends Seeder
 
 
         foreach ($users as $user) {
-            Address::factory()->create(['user_id' => $user->id]);
+            Address::create([
+                'user_id' => $user->id,
+                'address_1' => $faker->streetAddress(),
+                'address_2' => $faker->streetAddress(),
+                'city' => $faker->city(),
+                'state' => $faker->city(),
+                'country' => $faker->country(),
+                'pin_code' => $faker->postcode(),
+            ]);
         }
     }
 }

@@ -4,13 +4,11 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Faker;
-use Illuminate\Support\Facades\DB;
-use App\Models\User_profile;
 use App\Models\User;
-use App\Models\Student_profile;
-use App\Models\Teacher_profile;
+use App\Models\StudentProfile;
+use App\Models\TeacherProfile;
 
-class User_profileSeeder extends Seeder
+class UserProfileSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -37,7 +35,7 @@ class User_profileSeeder extends Seeder
             ->get();
 
         foreach ($students as $user) {
-            Student_profile::create([
+            StudentProfile::create([
                 'user_id' => $user->id,
                 'profile_picture' => $faker->imageUrl(
                     $width = 200,
@@ -54,7 +52,7 @@ class User_profileSeeder extends Seeder
             ->get();
 
         foreach ($teachers as $user) {
-            Teacher_profile::create([
+            TeacherProfile::create([
                 'user_id' => $user->id,
                 'profile_picture' => $faker->imageUrl(
                     $width = 200,

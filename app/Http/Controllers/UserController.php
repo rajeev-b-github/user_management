@@ -4,16 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Api\ApiResponseController;
 use App\Http\Requests\LoginRequest;
-use App\Http\Requests\Register;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\RegisterRequest;
-use Exception;
+
 
 class UserController extends Controller
 {
+    /**
+     * Register the specified resource to database.
+     *
+     * @param  int  $id and other registration fields
+     * @return \Illuminate\Http\Response
+     */
     public function register(RegisterRequest $req)
     {
         try {
@@ -36,7 +40,12 @@ class UserController extends Controller
             return response()->json($ex->getMessage(),);
         }
     }
-
+    /**
+     * Login the specified resource.
+     *
+     * @param  email and password
+     * @return \Illuminate\Http\Response
+     */
     public function login(LoginRequest $req)
     {
 
@@ -69,11 +78,17 @@ class UserController extends Controller
         }
         return $response;
     }
+
+    /**
+     * Logout the given resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function logout(Request $request)
     {
         try {
             $response[] = "";
-            auth();
+            auth()->user()->token()->revoke();
             $response = ApiResponseController::responseSuccess('User Logged out Successfully');
         } catch (\Throwable $th) {
             $response = ApiResponseController::responseServerError($th->getMessage());

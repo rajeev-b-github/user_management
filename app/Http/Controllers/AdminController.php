@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use App\Models\User;
-use App\Models\Student_profile;
+use App\Models\StudentProfile;
 use Exception;
 use App\Http\Controllers\Api\ApiResponseController;
 use App\Http\Controllers\Api\ApiNotificationController;
@@ -14,6 +14,13 @@ use App\Http\Controllers\Api\ApiNotificationController;
 class AdminController extends Controller
 {
     use Notifiable;
+
+    /**
+     * This function delete the perticular user
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete($id)
     {
         try {
@@ -31,7 +38,13 @@ class AdminController extends Controller
         }
         return $response;
     }
-    public function get_users_for_approval($userType)
+    /**
+     * This function returns all the unapproved users list
+     *
+     * @param  userType is student or teacher
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUsersForApproval($userType)
     {
         try {
             $response[] = "";
@@ -66,8 +79,13 @@ class AdminController extends Controller
             return ApiResponseController::responseServerError($e->getMessage());
         }
     }
-
-    public function approve_user($id)
+    /**
+     * This function approves the perticular unapproved user
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function approveUser($id)
     {
         try {
             $response[] = "";
@@ -87,7 +105,12 @@ class AdminController extends Controller
             return ApiResponseController::responseServerError($e->getMessage());
         }
     }
-    public function approve_all_users()
+    /**
+     * This function approves all the unapproved users and
+     * send email notification to all the approved users
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function approveAllUsers()
     {
         try {
             $response[] = "";
@@ -108,7 +131,13 @@ class AdminController extends Controller
             return ApiResponseController::responseServerError($e->getMessage());
         }
     }
-    public function assign_teacher(Request $req)
+    /**
+     * This function assigns a teacher to a student and send email
+     * notification and app notification to the assigned teacher
+     * @param  int $req->student_id and $req->teacher_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function assignTeacher(Request $req)
     {
         try {
 
@@ -118,7 +147,7 @@ class AdminController extends Controller
 
             if (count($student) > 0) {
 
-                $result = Student_profile::where('user_id', $req->student_id)
+                $result = StudentProfile::where('user_id', $req->student_id)
                     ->update(['assigned_teacher' => $teacher[0]->name]);
 
                 if ($result) {
@@ -138,17 +167,23 @@ class AdminController extends Controller
             return ApiResponseController::responseServerError($e->getMessage());
         }
     }
-    public function get_users($usertype)
+    /**
+     * This function returns all the users list by userType
+     *
+     * @param  userType is student or teacher
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUsers($usertype)
     {
         try {
             $response[] = "";
             $users = "";
             if ($usertype == 'student') {
                 $users = User::where('user_type', 'Student')
-                    ->with(['student_profile', 'address', 'parents_detail'])->get();
+                    ->with(['studentProfile', 'address', 'parentsDetail'])->get();
             } elseif ($usertype == 'teacher') {
                 $users = User::where('user_type', 'Teacher')
-                    ->with(['teacher_profile', 'address', 'subject'])->get();
+                    ->with(['teacherProfile', 'address', 'subject'])->get();
             } else {
                 return ApiResponseController::responseNotFound('Invalid user type');
             }
