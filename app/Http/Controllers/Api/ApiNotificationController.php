@@ -7,27 +7,22 @@ use App\Http\Controllers\Api\ApiResponseController;
 
 class ApiNotificationController extends Controller
 {
-    public static function sendApprovalNotification($id)
+
+    public function sendApprovalNotification($id)
     {
-        try {
-            $apiURL = env('API_URL');
-            $client = new \GuzzleHttp\Client();
-            return $client->request('POST', $apiURL . '/api/approval_notification/' . $id, [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                ],
-            ]);
-        } catch (\Throwable $e) {
-            return ApiResponseController::responseServerError($e->getMessage());
-        }
+        return $this->sendNotification('/api/approval_notification/' . $id);
     }
-    public static function sendTeacherAssisgnedToStudentNotification($teacherId, $studentId)
+    public function sendTeacherAssisgnedToStudentNotification($teacherId, $studentId)
+    {
+        return $this->sendNotification('/api/assign_teacher_notification', $studentId, $teacherId);
+    }
+
+    public function sendNotification($notifiactionType, $studentId = 0, $teacherId = 0)
     {
         try {
-            $apiURL = env('API_URL');
+            $apiURL = config('services.notification.url');
             $client = new \GuzzleHttp\Client();
-            return $client->request('POST', $apiURL . '/api/assign_teacher_notification', [
+            return $client->request('POST', $apiURL . $notifiactionType, [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/x-www-form-urlencoded',

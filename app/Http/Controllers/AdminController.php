@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\ApiResponseController;
 use App\Http\Controllers\Api\ApiNotificationController;
 
 
-class AdminController extends Controller
+class AdminController extends ApiNotificationController
 {
     use Notifiable;
 
